@@ -1,0 +1,64 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+@foreach (var item in Model.RssList)
+{
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-date">@item.PubDate</h4>
+            <h5>@item.Title</h5>
+
+            <p>@Html.Raw(@item.Description)</p>
+            <a href="@item.Link" class="container-link" target="_blank">
+                <button type="button" class="btn btn-primary">Link</button>
+            </a>
+        </div>
+    </div>
+    <br />
+}
+<nav>
+    <ul class="pagination justify-content-center">
+        @if (Model.PageNumber > 1)
+        {
+            <li class="page_item">
+                <a class="page-link" href="@Url.Page("Index", new { pageNumber = Model.PageNumber - 1, pageSize = Model.PageSize } )"></a>
+            </li>
+        }
+        @if (Model.PageNumber > 3)
+        {
+            <li class="page_item">
+                <a class="page-link" href="@Url.Page("Index", new { pageNumber = 1, pageSize = Model.PageSize } )"></a>
+            </li>
+            @if (Model.PageNumber > 4)
+            {
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            }
+        }
+        @for (int i = Math.Max(1, Model.PageNumber - 2); i <= Math.Min(Model.TotalPages, Model.PageNumber + 2); i++)
+        {
+            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                <a class="page-link" href="@Url.Page("Index", new { pageNumber = i, pageSize = Model.PageSize })"> @i</a>
+            </li>
+        }
+        @if (Model.PageNumber < Model.TotalPages - 2)
+        {
+            <li class="page-item disabled"><a class="page-link">...</a></li>
+            <li class="page-item">
+                <a class="page-link" href="@Url.Page("Index", new { pageNumber = Model.TotalPages, pageSize = Model.PageSize })">@Model.TotalPages</a>
+            </li>
+        }
+        @if (Model.PageNumber < Model.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" href="@Url.Page("Index", new { pageNumber = Model.PageNumber + 1, pageSize = Model.PageSize })">Next</a>
+            </li>
+        }
+
+    </ul>
+</nav>
+
